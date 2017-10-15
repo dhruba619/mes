@@ -34,5 +34,4 @@ public class MesApplication {
 		return new ApiInfoBuilder().title("MES Api Documentation").description("Refer to the documentation below")
 				.contact(new Contact("name", "url", "email")).version("1.0").build();
 	}
-
 }
