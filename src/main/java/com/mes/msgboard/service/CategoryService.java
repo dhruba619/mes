@@ -43,7 +43,6 @@ public class CategoryService {
 		category.setAllowDiscussions(categoryData.isAllowDiscussions());
 		category.setArchived(categoryData.isArchived());
 		category.setCreatedBy(userService.getUserFromToken(authToken));
-		// DateFormat format = new SimpleDateFormat("yyyy-mm-dd hh:mm:ss[.fffffffff]");
 		category.setCreatedOn(Timestamp.from(ZonedDateTime.now(ZoneOffset.UTC).toInstant()));
 		category.setDescription(categoryData.getDescription());
 		category.setName(categoryData.getName());

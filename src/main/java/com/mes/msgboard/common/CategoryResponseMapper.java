@@ -22,12 +22,12 @@ public class CategoryResponseMapper implements Function<List<Category>, Category
 	}
 
 	private CategoryData mapCategoryToCategoryData(Category category) {
-		
-		Integer parentCategoryId = (category.getParentCategoryId()!=null?category.getParentCategoryId().getId():null);
-		ZonedDateTime.of(category.getCreatedOn().toLocalDateTime(), ZoneId.systemDefault());
+
+		Integer parentCategoryId = (category.getParentCategoryId() != null ? category.getParentCategoryId().getId()
+				: null);
 		CategoryData data = new CategoryData(category.getId(), category.getName(), category.getDescription(),
-				category.getUrlCode(), parentCategoryId, category.isAllowDiscussions(),
-				category.isArchived(), category.getCreatedBy().getId(),
+				category.getUrlCode(), parentCategoryId, category.isAllowDiscussions(), category.isArchived(),
+				category.getCreatedBy().getId(),
 				ZonedDateTime.of(category.getCreatedOn().toLocalDateTime(), ZoneId.systemDefault()));
 		return data;
 
