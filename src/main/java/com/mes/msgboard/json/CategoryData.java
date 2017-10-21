@@ -22,7 +22,7 @@ public class CategoryData implements Serializable{
 	 */
 	private static final long serialVersionUID = -2764166438917640142L;
 	
-	@ApiModelProperty(dataType = "string", required = false, name = "id", value = "id")
+	@ApiModelProperty(dataType = "string", required = false, name = "id", value = "id",notes="Must be sent only in PUT")
 	@JsonProperty(required=false)
 	public Integer id;
 
@@ -40,7 +40,7 @@ public class CategoryData implements Serializable{
 	@JsonProperty(required=true)
 	private String description;
 
-	@ApiModelProperty(dataType = "string", required = false, name = "urlCode", value = "urlCode")
+	@ApiModelProperty(dataType = "string", required = false, name = "urlCode", value = "urlCode",readOnly=true)
 	@JsonProperty(required=false)
 	private String urlCode;
 
@@ -52,15 +52,15 @@ public class CategoryData implements Serializable{
 	@JsonProperty(required=false)
 	private boolean allowDiscussions;
 
-	@ApiModelProperty(dataType = "boolean", required = false, name = "archived", value = "archived")
+	@ApiModelProperty(dataType = "boolean", required = false, name = "locked", value = "locked",example="true")
 	@JsonProperty(required=false)
-	private boolean archived;
+	private boolean locked;
 
-	@ApiModelProperty(dataType = "integer", required = false, name = "createdBy", value = "createdBy")
+	@ApiModelProperty(dataType = "integer", required = false, name = "createdBy", value = "createdBy", readOnly=true)
 	@JsonProperty(required=false)
 	private Integer createdBy;
 
-	@ApiModelProperty(dataType = "date-time", required = false, name = "createdOn", value = "createdOn",example="2017-10-15T09:27:10.000+0000")
+	@ApiModelProperty(dataType = "date-time", required = false, name = "createdOn", value = "createdOn",readOnly=true, example="2017-10-15T09:27:10.000+0000")
 	@JsonProperty(required=false)
 	@JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ")
 	private ZonedDateTime createdOn;
@@ -113,12 +113,12 @@ public class CategoryData implements Serializable{
 		this.allowDiscussions = allowDiscussions;
 	}
 
-	public boolean isArchived() {
-		return archived;
+	public boolean isLocked() {
+		return locked;
 	}
 
-	public void setArchived(boolean archived) {
-		this.archived = archived;
+	public void setLocked(boolean archived) {
+		this.locked = archived;
 	}
 
 	public Integer getCreatedBy() {
@@ -150,7 +150,7 @@ public class CategoryData implements Serializable{
 		this.urlCode = urlCode;
 		this.parentCategoryId = parentCategoryId;
 		this.allowDiscussions = allowDiscussions;
-		this.archived = archived;
+		this.locked = archived;
 		this.createdBy = createdBy;
 		this.createdOn = createdOn;
 	}

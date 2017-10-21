@@ -23,7 +23,7 @@ public class DiscussionResponseMapper implements Function<List<Discussion>, Disc
 	}
 
 	private DiscussionData mapDiscussionToDiscussionData(Discussion discussion) {
-		return new DiscussionData(discussion.getId(), discussion.getBody(), discussion.getFormat(),
+		return new DiscussionData(discussion.getId(), discussion.getBody(), discussion.getTitle(),
 				discussion.getCategoryId().getId(), discussion.getTags(), discussion.getType(), discussion.isClosed(),
 				discussion.isAnnounce(), discussion.isSink(), discussion.getCreatedBy().getId(),
 				ZonedDateTime.of(discussion.getCreatedOn().toLocalDateTime(), ZoneId.systemDefault()));

@@ -50,8 +50,8 @@ public class Category {
 	@Column(name = "allow_discussions")
 	private boolean allowDiscussions;
 
-	@Column(name = "archived")
-	private boolean archived;
+	@Column(name = "locked")
+	private boolean locked;
 
 	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="created_by")
@@ -81,7 +81,7 @@ public class Category {
 		this.urlCode = urlCode;
 		this.parentCategoryId = parentCategoryId;
 		this.allowDiscussions = allowDiscussions;
-		this.archived = archived;
+		this.locked = archived;
 		this.createdBy = createdBy;
 		this.createdOn = createdOn;
 	}
@@ -145,12 +145,12 @@ public class Category {
 		this.allowDiscussions = allowDiscussions;
 	}
 
-	public boolean isArchived() {
-		return archived;
+	public boolean isLocked() {
+		return locked;
 	}
 
-	public void setArchived(boolean archived) {
-		this.archived = archived;
+	public void setLocked(boolean archived) {
+		this.locked = archived;
 	}
 
 	

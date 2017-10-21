@@ -12,12 +12,14 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.mes.msgboard.api.ICategoryApi;
 import com.mes.msgboard.common.CategoryResponseMapper;
 import com.mes.msgboard.common.MESException;
+import com.mes.msgboard.enums.SearchType;
 import com.mes.msgboard.json.CategoryRequest;
 import com.mes.msgboard.json.CategoryResponse;
 import com.mes.msgboard.json.ErrorResponse;
@@ -150,6 +152,47 @@ public class CategoryController implements ICategoryApi {
 					e);
 		}
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+	}
+
+	@Override
+	@RequestMapping(path = "/{categoryId}/disable-discussion", method = RequestMethod.PATCH)
+	@ApiOperation(value = "Disbale discussions for a category", tags = "category", response = CategoryResponse.class, code = 204)
+	@ApiResponses(value = { @ApiResponse(code = 204, message = "No Content"),
+			@ApiResponse(code = 400, message = "Bad Request", response = ErrorResponse.class),
+			@ApiResponse(code = 500, message = "Internal Server Error", response = ErrorResponse.class) })
+	@ResponseStatus(code = HttpStatus.NO_CONTENT)
+	public ResponseEntity<CategoryResponse> disbaleDiscussion(@RequestHeader(name = "Authorization") String authToken,
+			@ApiParam(name = "categoryId", required = true) @PathVariable("categoryId") String id)
+			throws NumberFormatException, MESException {
+		try {
+			categoryService.disableDiscussions(Integer.valueOf(id));
+		} catch (Exception e) {
+			throw new MESException("INTERNAL_SERVER_ERROR", "INTERNAL_SERVER_ERROR", HttpStatus.INTERNAL_SERVER_ERROR,
+					e);
+		}
+		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+	}
+
+	@Override
+	@RequestMapping(path = "/search", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	@ApiOperation(value = "Search categories by name", tags = "category", response = CategoryResponse.class, code = 200)
+	@ApiResponses(value = { @ApiResponse(code = 200, message = "OK", response = CategoryResponse.class),
+			@ApiResponse(code = 400, message = "Bad Request", response = ErrorResponse.class),
+			@ApiResponse(code = 500, message = "Internal Server Error", response = ErrorResponse.class) })
+	@ResponseStatus(code = HttpStatus.OK)
+	public ResponseEntity<CategoryResponse> searchCategoryByName(@RequestHeader(name = "Authorization")String authToken,
+			@ApiParam(example="some text",value="textQuery")@RequestParam("textQuery") String textQuery)
+			throws NumberFormatException, MESException {
+		try {
+			return ResponseEntity.status(HttpStatus.OK)
+					.body(new CategoryResponseMapper().apply(categoryService.searchByTitle(textQuery)));
+		} catch (Exception e) {
+			if (e instanceof MESException) {
+				throw e;
+			}
+			throw new MESException("INTERNAL_SERVER_ERROR", "INTERNAL_SERVER_ERROR", HttpStatus.INTERNAL_SERVER_ERROR,
+					e);
+		}
 	}
 
 }

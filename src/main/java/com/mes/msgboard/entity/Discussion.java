@@ -28,8 +28,8 @@ public class Discussion {
 	@Column(name = "body")
 	private String body;
 	
-	@Column(name = "format")
-	private String format;
+	@Column(name = "title")
+	private String title;
 	
 	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="category_id")
@@ -71,12 +71,12 @@ public class Discussion {
 	 * @param createdBy
 	 * @param createdOn
 	 */
-	public Discussion(Integer id, String body, String format, Category categoryId, String tags, String type,
+	public Discussion(Integer id, String body, String title, Category categoryId, String tags, String type,
 			boolean closed, boolean announce, boolean sink, User createdBy, Timestamp createdOn) {
 		super();
 		this.id = id;
 		this.body = body;
-		this.format = format;
+		this.title = title;
 		this.categoryId = categoryId;
 		this.tags = tags;
 		this.type = type;
@@ -108,12 +108,12 @@ public class Discussion {
 		this.body = body;
 	}
 
-	public String getFormat() {
-		return format;
+	public String getTitle() {
+		return title;
 	}
 
-	public void setFormat(String format) {
-		this.format = format;
+	public void setTitle(String title) {
+		this.title = title;
 	}
 
 	public Category getCategoryId() {

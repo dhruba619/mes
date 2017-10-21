@@ -26,7 +26,7 @@ public class CategoryResponseMapper implements Function<List<Category>, Category
 		Integer parentCategoryId = (category.getParentCategoryId() != null ? category.getParentCategoryId().getId()
 				: null);
 		CategoryData data = new CategoryData(category.getId(), category.getName(), category.getDescription(),
-				category.getUrlCode(), parentCategoryId, category.isAllowDiscussions(), category.isArchived(),
+				category.getUrlCode(), parentCategoryId, category.isAllowDiscussions(), category.isLocked(),
 				category.getCreatedBy().getId(),
 				ZonedDateTime.of(category.getCreatedOn().toLocalDateTime(), ZoneId.systemDefault()));
 		return data;

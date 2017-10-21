@@ -3,6 +3,12 @@ package com.mes.msgboard.json;
 import java.io.Serializable;
 import java.time.ZonedDateTime;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.groups.Default;
+
+import org.hibernate.validator.constraints.NotBlank;
+import org.hibernate.validator.constraints.NotEmpty;
+
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
@@ -25,15 +31,22 @@ public class DiscussionData implements Serializable {
 	private Integer id;
 	
 	@ApiModelProperty(dataType = "string", required = true, name = "body", value = "body")
+	@NotNull(groups=Default.class)
+	@NotBlank(groups=Default.class)
+	@NotEmpty(groups=Default.class)
 	@JsonProperty(required=true)
 	private String body;
 	
-	@ApiModelProperty(dataType = "string", required = false, name = "format", value = "format")
-	@JsonProperty(required=false)
-	private String format;
+	@ApiModelProperty(dataType = "string", required = true, name = "title", value = "title")
+	@NotNull(groups=Default.class)
+	@NotBlank(groups=Default.class)
+	@NotEmpty(groups=Default.class)
+	@JsonProperty(required=true)
+	private String title;
 	
 	@ApiModelProperty(dataType = "string", required = true, name = "categoryId", value = "categoryId")
 	@JsonProperty(required=true)
+	@NotNull(groups=Default.class)
 	private Integer categoryId;
 	
 	@ApiModelProperty(dataType = "string", required = false, name = "id", value = "id",notes="Comma seperated tags")
@@ -56,11 +69,11 @@ public class DiscussionData implements Serializable {
 	@JsonProperty(required=false)
 	private boolean sink;
 	
-	@ApiModelProperty(dataType = "integer", required = false, name = "createdBy", value = "createdBy")
+	@ApiModelProperty(readOnly=true, dataType = "integer", required = false, name = "createdBy", value = "createdBy")
 	@JsonProperty(required=false)
 	private Integer createdBy;
 	
-	@ApiModelProperty(dataType = "date-time", required = false, name = "createdOn", value = "createdOn",example="2017-10-15T09:27:10.000+0000")
+	@ApiModelProperty(readOnly=true, dataType = "date-time", required = false, name = "createdOn", value = "createdOn",example="2017-10-15T09:27:10.000+0000")
 	@JsonProperty(required=false)
 	@JsonFormat(pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ")
 	private ZonedDateTime createdOn;
@@ -79,12 +92,12 @@ public class DiscussionData implements Serializable {
 	 * @param createdBy
 	 * @param createdOn
 	 */
-	public DiscussionData(Integer id, String body, String format, Integer categoryId, String tags, String type,
+	public DiscussionData(Integer id, String body, String title, Integer categoryId, String tags, String type,
 			boolean closed, boolean announce, boolean sink, Integer createdBy, ZonedDateTime createdOn) {
 		super();
 		this.id = id;
 		this.body = body;
-		this.format = format;
+		this.title = title;
 		this.categoryId = categoryId;
 		this.tags = tags;
 		this.type = type;
@@ -116,12 +129,12 @@ public class DiscussionData implements Serializable {
 		this.body = body;
 	}
 
-	public String getFormat() {
-		return format;
+	public String getTitle() {
+		return title;
 	}
 
-	public void setFormat(String format) {
-		this.format = format;
+	public void setTitle(String title) {
+		this.title = title;
 	}
 
 	public Integer getCategoryId() {
