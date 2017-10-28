@@ -8,6 +8,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.concurrent.ThreadPoolTaskExecutor;
+import org.springframework.security.oauth2.config.annotation.web.configuration.EnableResourceServer;
 
 import com.google.common.base.Predicates;
 
@@ -22,6 +23,7 @@ import springfox.documentation.swagger2.annotations.EnableSwagger2;
 @SpringBootApplication
 @EnableSwagger2
 @EnableAsync
+@EnableResourceServer
 @ComponentScan(basePackages = "com.*")
 public class MesApplication {
 
@@ -32,7 +34,8 @@ public class MesApplication {
 	@Bean
 	public Docket swaggerConfiguration() {
 		return new Docket(DocumentationType.SWAGGER_2).useDefaultResponseMessages(false).apiInfo(apiInfo()).select()
-				.paths(Predicates.not(PathSelectors.regex("/error.*"))).build();
+				.paths(Predicates.not(PathSelectors.regex("/error.*")))
+				.paths(Predicates.not(PathSelectors.regex("/oauth.*"))).build();
 	}
 	
 	@Bean(name = "threadPoolTaskExecutor")
@@ -41,7 +44,12 @@ public class MesApplication {
     }		
 
 	private ApiInfo apiInfo() {
-		return new ApiInfoBuilder().title("MES Api Documentation").description("Refer to the documentation below")
+		return new ApiInfoBuilder().title("MES Api Documentation")
+				.description("Refer to the documentation below").description("Use the following curl command to get access token"
+						+ "\n\rAdd the token in Authorisation Header as \"Bearer <token>\""
+						+ "\n\rcurl -X POST --user 'mes:secret' -d 'grant_type=password&username=johnd&password=1234' https://mes-beta.herokuapp.com/oauth/token"
+						+ "\n\r username johnd has ADMIN rights, and can create categories."
+						+ "\n\r username jacksond is a regular user. Both has same passwords")
 				.contact(new Contact("name", "url", "email")).version("1.0").build();
 	}
 }

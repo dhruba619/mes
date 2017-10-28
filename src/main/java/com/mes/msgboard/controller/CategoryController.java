@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.mes.msgboard.api.ICategoryApi;
 import com.mes.msgboard.common.CategoryResponseMapper;
 import com.mes.msgboard.common.MESException;
+import com.mes.msgboard.entity.User;
 import com.mes.msgboard.enums.SearchType;
 import com.mes.msgboard.json.CategoryRequest;
 import com.mes.msgboard.json.CategoryResponse;
@@ -62,7 +64,8 @@ public class CategoryController implements ICategoryApi {
 			if (e instanceof MESException) {
 				throw e;
 			}
-			throw new MESException("INTERNAL_SERVER_ERROR", "INTERNAL_SERVER_ERROR", HttpStatus.INTERNAL_SERVER_ERROR,
+			e.printStackTrace();
+			throw new MESException("INTERNAL_SERVER_ERROR", "INTERNAL_SERVER_ERROR: "+e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR,
 					e);
 		}
 	}

@@ -1,12 +1,9 @@
 package com.mes.msgboard.service;
 
 import java.sql.Timestamp;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.StreamSupport;
@@ -20,11 +17,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.scheduling.annotation.Async;
-import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.stereotype.Service;
 
 import com.mes.msgboard.common.MESException;
 import com.mes.msgboard.entity.Category;
+import com.mes.msgboard.entity.User;
 import com.mes.msgboard.json.CategoryData;
 import com.mes.msgboard.repository.ICategoryRepository;
 
@@ -45,16 +42,21 @@ public class CategoryService {
 	 * @throws MESException
 	 */
 	public List<Category> createCategory(String authToken, CategoryData categoryData) throws MESException {
-
+		
+		User user =userService.getUserFromToken(authToken);		
+		if (!user.getRole().equals("ADMIN")) {
+			throw new MESException("FORBIDDEN", "User is forbidden to perform this operation", HttpStatus.FORBIDDEN, null);
+		}
+		
 		List<Category> categories = new ArrayList<>();
 		Category category = new Category();
 		category.setAllowDiscussions(categoryData.isAllowDiscussions());
 		category.setLocked(categoryData.isLocked());
-		category.setCreatedBy(userService.getUserFromToken(authToken));
+		category.setCreatedBy(user);
 		category.setCreatedOn(Timestamp.from(ZonedDateTime.now(ZoneOffset.UTC).toInstant()));
 		category.setDescription(categoryData.getDescription());
 		category.setName(categoryData.getName());
-		if (null != categoryData.getParentCategoryId()) {
+		if (null != categoryData.getParentCategoryId() && categoryData.getParentCategoryId()!=0) {
 			Category parent = getCategoryById(categoryData.getParentCategoryId());
 			category.setParentCategoryId(parent);
 			lockCatgeroryForUpdates(parent);
