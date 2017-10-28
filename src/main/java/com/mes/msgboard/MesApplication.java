@@ -50,6 +50,7 @@ public class MesApplication {
 						+ "\n\r<strong>curl -X POST --user 'mes:secret' -d 'grant_type=password&username=johnd&password=1234' https://mes-beta.herokuapp.com/oauth/token</strong>"
 						+ "\n\r username <strong>johnd</strong> has ADMIN rights, and can create categories."
 						+ "\n\r username <strong>jacksond</strong> is a regular user. Both has same passwords")
+
 				.contact(new Contact("name", "url", "email")).version("1.0").build();
 	}
 }
