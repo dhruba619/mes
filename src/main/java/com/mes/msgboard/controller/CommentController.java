@@ -45,7 +45,8 @@ public class CommentController implements ICommentAPI {
 	@ApiOperation(value = "Create comment", tags = "comment", response = CommentResponse.class, code = 201)
 	@ApiResponses(value = { @ApiResponse(code = 201, message = "Created", response = CategoryResponse.class),
 			@ApiResponse(code = 400, message = "Bad Request", response = ErrorResponse.class),
-			@ApiResponse(code = 500, message = "Internal Server Error", response = ErrorResponse.class) })
+			@ApiResponse(code = 500, message = "Internal Server Error", response = ErrorResponse.class),
+			@ApiResponse(code = 401, message = "UnAuthorized", response = ErrorResponse.class) })
 	@ResponseStatus(code = HttpStatus.CREATED)
 	public ResponseEntity<CommentResponse> createComment(@RequestHeader(name = "Authorization") String authToken,
 			@RequestBody CommentRequest commentRequest) throws MESException {
@@ -72,7 +73,8 @@ public class CommentController implements ICommentAPI {
 	@ApiOperation(value = "Update comment", tags = "comment", response = CommentResponse.class, code = 202)
 	@ApiResponses(value = { @ApiResponse(code = 202, message = "Created", response = CategoryResponse.class),
 			@ApiResponse(code = 400, message = "Bad Request", response = ErrorResponse.class),
-			@ApiResponse(code = 500, message = "Internal Server Error", response = ErrorResponse.class) })
+			@ApiResponse(code = 500, message = "Internal Server Error", response = ErrorResponse.class),
+			@ApiResponse(code = 401, message = "UnAuthorized", response = ErrorResponse.class) })
 	@ResponseStatus(code = HttpStatus.ACCEPTED)
 	public ResponseEntity<CommentResponse> updateComment(@RequestHeader(name = "Authorization") String authToken,
 			@RequestBody CommentRequest commentRequest) throws MESException {
@@ -103,7 +105,8 @@ public class CommentController implements ICommentAPI {
 	@ApiOperation(value = "Delete comment", tags = "comment", response = CommentResponse.class, code = 204)
 	@ApiResponses(value = { @ApiResponse(code = 204, message = "No Content"),
 			@ApiResponse(code = 400, message = "Bad Request", response = ErrorResponse.class),
-			@ApiResponse(code = 500, message = "Internal Server Error", response = ErrorResponse.class) })
+			@ApiResponse(code = 500, message = "Internal Server Error", response = ErrorResponse.class),
+			@ApiResponse(code = 401, message = "UnAuthorized", response = ErrorResponse.class) })
 	@ResponseStatus(code = HttpStatus.NO_CONTENT)
 	public ResponseEntity<CommentResponse> deleteComment(@RequestHeader(name = "Authorization") String authToken,
 			@ApiParam(name = "commentId", required = true) @PathVariable(name = "commentId", required = true) String commentId)
@@ -122,7 +125,8 @@ public class CommentController implements ICommentAPI {
 	@ApiOperation(value = "Get all comments by discussion", tags = "comment", response = CommentResponse.class, code = 204)
 	@ApiResponses(value = { @ApiResponse(code = 204, message = "No Content"),
 			@ApiResponse(code = 400, message = "Bad Request", response = ErrorResponse.class),
-			@ApiResponse(code = 500, message = "Internal Server Error", response = ErrorResponse.class) })
+			@ApiResponse(code = 500, message = "Internal Server Error", response = ErrorResponse.class),
+			@ApiResponse(code = 401, message = "UnAuthorized", response = ErrorResponse.class) })
 	@ResponseStatus(code = HttpStatus.OK)
 	public ResponseEntity<CommentResponse> getCommentByDiscussion(
 			@RequestHeader(name = "Authorization") String authToken,

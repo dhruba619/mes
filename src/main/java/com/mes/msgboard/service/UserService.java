@@ -1,19 +1,40 @@
 package com.mes.msgboard.service;
 
-import java.sql.Timestamp;
-import java.time.ZoneOffset;
-import java.time.ZonedDateTime;
-
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import com.mes.msgboard.entity.User;
+import com.mes.msgboard.repository.IUserRepository;
 
-@Service
-public class UserService {
-	
+@Service("userDetailsService")
+public class UserService implements UserDetailsService {
+
 	public User getUserFromToken(String token) {
-		//TODO Auth and user feature is yet to be implmented
-		return new User(1, "John Doe", "john@doe.com", "1234", "johnd", true,
-				Timestamp.from(ZonedDateTime.now(ZoneOffset.UTC).toInstant()), "some_url", 1);
+		
+		User user = (User)SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+		return user;
+	}
+
+	@Autowired
+	private IUserRepository userRepository;
+
+	@Autowired
+	private PasswordEncoder encoder;
+
+	@Override
+	public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+		UserDetails user = userRepository.findOneByUsername(username);
+		return user;
+	}
+
+	public void saveUser(User user) {
+		String encodedPassword = encoder.encode(user.getPassword());
+		user.setPassword(encodedPassword);
+		userRepository.save(user);
 	}
 }

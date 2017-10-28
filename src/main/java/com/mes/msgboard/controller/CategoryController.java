@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestHeader;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.mes.msgboard.api.ICategoryApi;
 import com.mes.msgboard.common.CategoryResponseMapper;
 import com.mes.msgboard.common.MESException;
+import com.mes.msgboard.entity.User;
 import com.mes.msgboard.enums.SearchType;
 import com.mes.msgboard.json.CategoryRequest;
 import com.mes.msgboard.json.CategoryResponse;
@@ -45,7 +47,9 @@ public class CategoryController implements ICategoryApi {
 	@ApiOperation(value = "Create category", tags = "category", response = CategoryResponse.class, code = 201)
 	@ApiResponses(value = { @ApiResponse(code = 201, message = "Created", response = CategoryResponse.class),
 			@ApiResponse(code = 400, message = "Bad Request", response = ErrorResponse.class),
-			@ApiResponse(code = 500, message = "Internal Server Error", response = ErrorResponse.class) })
+			@ApiResponse(code = 500, message = "Internal Server Error", response = ErrorResponse.class),
+			@ApiResponse(code = 401, message = "UnAuthorized", response = ErrorResponse.class),
+			@ApiResponse(code = 403, message = "Forbidden", response = ErrorResponse.class)})
 	@ResponseStatus(code = HttpStatus.CREATED)
 	public ResponseEntity<CategoryResponse> createCategory(@RequestHeader(name = "Authorization") String authToken,
 			@RequestBody CategoryRequest categoryRequest) throws MESException {
@@ -62,7 +66,8 @@ public class CategoryController implements ICategoryApi {
 			if (e instanceof MESException) {
 				throw e;
 			}
-			throw new MESException("INTERNAL_SERVER_ERROR", "INTERNAL_SERVER_ERROR", HttpStatus.INTERNAL_SERVER_ERROR,
+			e.printStackTrace();
+			throw new MESException("INTERNAL_SERVER_ERROR", "INTERNAL_SERVER_ERROR: "+e.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR,
 					e);
 		}
 	}
@@ -72,7 +77,8 @@ public class CategoryController implements ICategoryApi {
 	@ApiOperation(value = "Get category by id", tags = "category", response = CategoryResponse.class, code = 200)
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "OK", response = CategoryResponse.class),
 			@ApiResponse(code = 400, message = "Bad Request", response = ErrorResponse.class),
-			@ApiResponse(code = 500, message = "Internal Server Error", response = ErrorResponse.class) })
+			@ApiResponse(code = 500, message = "Internal Server Error", response = ErrorResponse.class),
+			@ApiResponse(code = 401, message = "UnAuthorized", response = ErrorResponse.class)})
 	@ResponseStatus(code = HttpStatus.OK)
 	public ResponseEntity<CategoryResponse> getCategory(@RequestHeader(name = "Authorization") String authToken,
 			@ApiParam(name = "categoryId", required = true)@PathVariable("categoryId")String id) throws NumberFormatException, MESException {
@@ -93,7 +99,8 @@ public class CategoryController implements ICategoryApi {
 	@ApiOperation(value = "Get all categories", tags = "category", response = CategoryResponse.class, code = 200)
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "Ok", response = CategoryResponse.class),
 			@ApiResponse(code = 400, message = "Bad Request", response = ErrorResponse.class),
-			@ApiResponse(code = 500, message = "Internal Server Error", response = ErrorResponse.class) })
+			@ApiResponse(code = 500, message = "Internal Server Error", response = ErrorResponse.class),
+			@ApiResponse(code = 401, message = "UnAuthorized", response = ErrorResponse.class) })
 	@ResponseStatus(code = HttpStatus.OK)
 	public ResponseEntity<CategoryResponse> getCategories(@RequestHeader(name = "Authorization") String authToken)
 			throws MESException {
@@ -114,7 +121,8 @@ public class CategoryController implements ICategoryApi {
 	@ApiOperation(value = "Update category", tags = "category", response = CategoryResponse.class, code = 202)
 	@ApiResponses(value = { @ApiResponse(code = 202, message = "Accepted", response = CategoryResponse.class),
 			@ApiResponse(code = 400, message = "Bad Request", response = ErrorResponse.class),
-			@ApiResponse(code = 500, message = "Internal Server Error", response = ErrorResponse.class) })
+			@ApiResponse(code = 500, message = "Internal Server Error", response = ErrorResponse.class),
+			@ApiResponse(code = 401, message = "UnAuthorized", response = ErrorResponse.class) })
 	@ResponseStatus(code = HttpStatus.ACCEPTED)
 	public ResponseEntity<CategoryResponse> updateCategory(@RequestHeader(name = "Authorization") String authToken,
 			@RequestBody CategoryRequest categoryRequest) throws MESException {
@@ -141,7 +149,8 @@ public class CategoryController implements ICategoryApi {
 	@ApiOperation(value = "Delete category by id", tags = "category", response = CategoryResponse.class, code = 204)
 	@ApiResponses(value = { @ApiResponse(code = 204, message = "No Content"),
 			@ApiResponse(code = 400, message = "Bad Request", response = ErrorResponse.class),
-			@ApiResponse(code = 500, message = "Internal Server Error", response = ErrorResponse.class) })
+			@ApiResponse(code = 500, message = "Internal Server Error", response = ErrorResponse.class),
+			@ApiResponse(code = 401, message = "UnAuthorized", response = ErrorResponse.class) })
 	@ResponseStatus(code = HttpStatus.NO_CONTENT)
 	public ResponseEntity<CategoryResponse> deleteCategory(@RequestHeader(name = "Authorization") String authToken,
 			@ApiParam(name = "categoryId", required = true) @PathVariable("categoryId") String id) throws MESException {
@@ -159,7 +168,8 @@ public class CategoryController implements ICategoryApi {
 	@ApiOperation(value = "Disbale discussions for a category", tags = "category", response = CategoryResponse.class, code = 204)
 	@ApiResponses(value = { @ApiResponse(code = 204, message = "No Content"),
 			@ApiResponse(code = 400, message = "Bad Request", response = ErrorResponse.class),
-			@ApiResponse(code = 500, message = "Internal Server Error", response = ErrorResponse.class) })
+			@ApiResponse(code = 500, message = "Internal Server Error", response = ErrorResponse.class),
+			@ApiResponse(code = 401, message = "UnAuthorized", response = ErrorResponse.class) })
 	@ResponseStatus(code = HttpStatus.NO_CONTENT)
 	public ResponseEntity<CategoryResponse> disbaleDiscussion(@RequestHeader(name = "Authorization") String authToken,
 			@ApiParam(name = "categoryId", required = true) @PathVariable("categoryId") String id)
@@ -178,7 +188,8 @@ public class CategoryController implements ICategoryApi {
 	@ApiOperation(value = "Search categories by name", tags = "category", response = CategoryResponse.class, code = 200)
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "OK", response = CategoryResponse.class),
 			@ApiResponse(code = 400, message = "Bad Request", response = ErrorResponse.class),
-			@ApiResponse(code = 500, message = "Internal Server Error", response = ErrorResponse.class) })
+			@ApiResponse(code = 500, message = "Internal Server Error", response = ErrorResponse.class),
+			@ApiResponse(code = 401, message = "UnAuthorized", response = ErrorResponse.class) })
 	@ResponseStatus(code = HttpStatus.OK)
 	public ResponseEntity<CategoryResponse> searchCategoryByName(@RequestHeader(name = "Authorization")String authToken,
 			@ApiParam(example="some text",value="textQuery")@RequestParam("textQuery") String textQuery)

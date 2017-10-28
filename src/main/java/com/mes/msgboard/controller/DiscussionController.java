@@ -45,7 +45,8 @@ public class DiscussionController implements IDiscussionAPI {
 	@ApiOperation(value = "Create Discussion", tags = "discussion", response = DiscussionResponse.class, code = 201)
 	@ApiResponses(value = { @ApiResponse(code = 201, message = "Created", response = DiscussionResponse.class),
 			@ApiResponse(code = 400, message = "Bad Request", response = ErrorResponse.class),
-			@ApiResponse(code = 500, message = "Internal Server Error", response = ErrorResponse.class) })
+			@ApiResponse(code = 500, message = "Internal Server Error", response = ErrorResponse.class),
+			@ApiResponse(code = 401, message = "UnAuthorized", response = ErrorResponse.class) })
 	@ResponseStatus(code = HttpStatus.CREATED)
 	public ResponseEntity<DiscussionResponse> createDiscussion(@RequestHeader(name = "Authorization") String authToken,
 			@RequestBody DiscussionRequest discussionRequest) throws MESException {
@@ -72,7 +73,8 @@ public class DiscussionController implements IDiscussionAPI {
 	@ApiOperation(value = "Get All Discussions", tags = "discussion", response = DiscussionResponse.class, code = 200)
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "OK", response = DiscussionResponse.class),
 			@ApiResponse(code = 400, message = "Bad Request", response = ErrorResponse.class),
-			@ApiResponse(code = 500, message = "Internal Server Error", response = ErrorResponse.class) })
+			@ApiResponse(code = 500, message = "Internal Server Error", response = ErrorResponse.class),
+			@ApiResponse(code = 401, message = "UnAuthorized", response = ErrorResponse.class) })
 	@ResponseStatus(code = HttpStatus.OK)
 	public ResponseEntity<DiscussionResponse> getAllDiscussion(@RequestHeader(name = "Authorization") String authToken)
 			throws MESException {
@@ -94,7 +96,8 @@ public class DiscussionController implements IDiscussionAPI {
 	@ApiOperation(value = "Get All Discussions for a category", tags = "discussion", response = DiscussionResponse.class, code = 200)
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "OK", response = DiscussionResponse.class),
 			@ApiResponse(code = 400, message = "Bad Request", response = ErrorResponse.class),
-			@ApiResponse(code = 500, message = "Internal Server Error", response = ErrorResponse.class) })
+			@ApiResponse(code = 500, message = "Internal Server Error", response = ErrorResponse.class),
+			@ApiResponse(code = 401, message = "UnAuthorized", response = ErrorResponse.class) })
 	@ResponseStatus(code = HttpStatus.OK)
 	public ResponseEntity<DiscussionResponse> getAllDiscussionByCategory(
 			@RequestHeader(name = "Authorization") String authToken,
@@ -118,7 +121,8 @@ public class DiscussionController implements IDiscussionAPI {
 	@ApiOperation(value = "Update a discussion", tags = "discussion", response = DiscussionResponse.class, code = 202)
 	@ApiResponses(value = { @ApiResponse(code = 202, message = "Accepted", response = DiscussionResponse.class),
 			@ApiResponse(code = 400, message = "Bad Request", response = ErrorResponse.class),
-			@ApiResponse(code = 500, message = "Internal Server Error", response = ErrorResponse.class) })
+			@ApiResponse(code = 500, message = "Internal Server Error", response = ErrorResponse.class),
+			@ApiResponse(code = 401, message = "UnAuthorized", response = ErrorResponse.class) })
 	@ResponseStatus(code = HttpStatus.ACCEPTED)
 	public ResponseEntity<DiscussionResponse> editDiscussion(@RequestHeader(name = "Authorization")String authToken,@RequestBody DiscussionRequest discussionRequest)
 			throws MESException {
@@ -142,7 +146,8 @@ public class DiscussionController implements IDiscussionAPI {
 	@ApiOperation(value = "Search discussions", tags = "discussion", response = DiscussionResponse.class, code = 200)
 	@ApiResponses(value = { @ApiResponse(code = 200, message = "OK", response = DiscussionResponse.class),
 			@ApiResponse(code = 400, message = "Bad Request", response = ErrorResponse.class),
-			@ApiResponse(code = 500, message = "Internal Server Error", response = ErrorResponse.class) })
+			@ApiResponse(code = 500, message = "Internal Server Error", response = ErrorResponse.class),
+			@ApiResponse(code = 401, message = "UnAuthorized", response = ErrorResponse.class) })
 	@ResponseStatus(code = HttpStatus.OK)
 	public ResponseEntity<DiscussionResponse> searchDiscussion(@RequestHeader(name = "Authorization")String authToken,@ApiParam(example="body",value="filter") @RequestParam("filter") SearchType filter,
 			@ApiParam(example="some text",value="textQuery")@RequestParam("textQuery") String textQuery) throws MESException {
