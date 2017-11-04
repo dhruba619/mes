@@ -32,7 +32,7 @@ public class CommentService {
 	@Autowired
 	private UserService userService;
 
-	public List<Comment> createComment(String authToken, CommentData data) throws MESException {
+	public List<Comment> createComment(CommentData data) throws MESException {
 		List<Comment> comments = new ArrayList<>();
 
 		Comment comment = new Comment();
@@ -40,7 +40,7 @@ public class CommentService {
 		User user;
 		try {
 			dis = discussionService.getDiscussion(data.getDiscussionId()).get(0);
-			user = userService.getUserFromToken(authToken);
+			user = userService.getUserFromToken();
 		} catch (MESException e) {
 			throw e;
 		}
@@ -58,7 +58,7 @@ public class CommentService {
 
 	}
 
-	public List<Comment> updateComment(String authToken, CommentData data) throws MESException {
+	public List<Comment> updateComment(CommentData data) throws MESException {
 		List<Comment> comments = new ArrayList<>();
 
 		Comment comment = new Comment();
@@ -66,7 +66,7 @@ public class CommentService {
 		User user;
 		try {
 			dis = discussionService.getDiscussion(data.getDiscussionId()).get(0);
-			user = userService.getUserFromToken(authToken);
+			user = userService.getUserFromToken();
 		} catch (MESException e) {
 			throw e;
 		}

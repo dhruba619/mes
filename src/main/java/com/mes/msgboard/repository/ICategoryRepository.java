@@ -11,5 +11,7 @@ import com.mes.msgboard.entity.Category;
 public interface ICategoryRepository extends CrudRepository<Category, Serializable>,JpaSpecificationExecutor<Category>{
 
 	List<Category> findByNameLike(String textQuery);
+	
+	List<Category> findAllByPurged(boolean purged);
 
 }

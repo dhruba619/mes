@@ -13,6 +13,7 @@ import org.springframework.security.oauth2.config.annotation.configurers.ClientD
 import org.springframework.security.oauth2.config.annotation.web.configuration.AuthorizationServerConfigurerAdapter;
 import org.springframework.security.oauth2.config.annotation.web.configuration.EnableAuthorizationServer;
 import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerEndpointsConfigurer;
+import org.springframework.security.oauth2.config.annotation.web.configurers.AuthorizationServerSecurityConfigurer;
 
 @Configuration
 @EnableAuthorizationServer
@@ -25,14 +26,25 @@ public class OAuthConfig extends AuthorizationServerConfigurerAdapter {
 	@Autowired
 	private AuthenticationManager authenticationManager;
 
-	@Value("${gigy.oauth.tokenTimeout:3600}")
+	@Value("${mes.oauth.tokenTimeout:3600}")
 	private int expiration;
+	
+	@Value("${mes.client.id:mes}")
+	private String clientId;
+	
+	@Value("${mes.client.secret:changeme}")
+	private String clientSecret;
 
 	// password encryptor
 	@Bean
 	public PasswordEncoder passwordEncoder() {
 		return new BCryptPasswordEncoder();
 	}
+	
+	@Override
+	  public void configure(AuthorizationServerSecurityConfigurer oauthServer) throws Exception {
+	    oauthServer.allowFormAuthenticationForClients();
+	  }
 
 	@Override
 	public void configure(AuthorizationServerEndpointsConfigurer configurer) throws Exception {
@@ -42,7 +54,7 @@ public class OAuthConfig extends AuthorizationServerConfigurerAdapter {
 
 	@Override
 	public void configure(ClientDetailsServiceConfigurer clients) throws Exception {
-		clients.inMemory().withClient("mes").secret("secret").accessTokenValiditySeconds(3600)
+		clients.inMemory().withClient(clientId).secret(clientSecret).accessTokenValiditySeconds(expiration)
 				.scopes("read", "write").authorizedGrantTypes("password", "refresh_token").resourceIds("resource");
 	}
 

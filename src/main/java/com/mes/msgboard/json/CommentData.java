@@ -1,7 +1,6 @@
 package com.mes.msgboard.json;
 
 import java.io.Serializable;
-import java.sql.Timestamp;
 import java.time.ZonedDateTime;
 
 import javax.validation.constraints.NotNull;
@@ -12,7 +11,6 @@ import org.hibernate.validator.constraints.NotEmpty;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import com.mes.msgboard.entity.User;
 
 import io.swagger.annotations.ApiModelProperty;
 

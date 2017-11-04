@@ -9,7 +9,6 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -25,13 +24,14 @@ import com.mes.msgboard.json.DiscussionResponse;
 import com.mes.msgboard.json.ErrorResponse;
 import com.mes.msgboard.service.DiscussionService;
 
+import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import io.swagger.annotations.ApiResponse;
 import io.swagger.annotations.ApiResponses;
 
 @RestController
-@RequestMapping(path = "/api/v1.0")
+@RequestMapping(path = "/api/${mes.api.version}")
 public class DiscussionController implements IDiscussionAPI {
 
 	@Autowired
@@ -47,9 +47,10 @@ public class DiscussionController implements IDiscussionAPI {
 			@ApiResponse(code = 400, message = "Bad Request", response = ErrorResponse.class),
 			@ApiResponse(code = 500, message = "Internal Server Error", response = ErrorResponse.class),
 			@ApiResponse(code = 401, message = "UnAuthorized", response = ErrorResponse.class) })
+	@ApiImplicitParam(paramType="header",name="Authorization",required=true)
 	@ResponseStatus(code = HttpStatus.CREATED)
-	public ResponseEntity<DiscussionResponse> createDiscussion(@RequestHeader(name = "Authorization") String authToken,
-			@RequestBody DiscussionRequest discussionRequest) throws MESException {
+	public ResponseEntity<DiscussionResponse> createDiscussion(@RequestBody DiscussionRequest discussionRequest)
+			throws MESException {
 		try {
 			if (validator.validate(discussionRequest, Default.class).size() > 0) {
 				throw new MESException("BAD_REQUEST", "Missing required param", HttpStatus.BAD_REQUEST, null);
@@ -58,7 +59,7 @@ public class DiscussionController implements IDiscussionAPI {
 				throw new MESException("BAD_REQUEST", "Missing required param", HttpStatus.BAD_REQUEST, null);
 			}
 			return ResponseEntity.status(HttpStatus.CREATED).body(new DiscussionResponseMapper()
-					.apply(discussionService.createDiscusion(authToken, discussionRequest.getDiscussion())));
+					.apply(discussionService.createDiscusion(discussionRequest.getDiscussion())));
 		} catch (Exception e) {
 			if (e instanceof MESException) {
 				throw e;
@@ -75,13 +76,13 @@ public class DiscussionController implements IDiscussionAPI {
 			@ApiResponse(code = 400, message = "Bad Request", response = ErrorResponse.class),
 			@ApiResponse(code = 500, message = "Internal Server Error", response = ErrorResponse.class),
 			@ApiResponse(code = 401, message = "UnAuthorized", response = ErrorResponse.class) })
+	@ApiImplicitParam(paramType="header",name="Authorization",required=true)
 	@ResponseStatus(code = HttpStatus.OK)
-	public ResponseEntity<DiscussionResponse> getAllDiscussion(@RequestHeader(name = "Authorization") String authToken)
-			throws MESException {
+	public ResponseEntity<DiscussionResponse> getAllDiscussion() throws MESException {
 		try {
 
 			return ResponseEntity.status(HttpStatus.OK)
-					.body(new DiscussionResponseMapper().apply(discussionService.getAllDiscusion(authToken)));
+					.body(new DiscussionResponseMapper().apply(discussionService.getAllDiscusion()));
 		} catch (Exception e) {
 			if (e instanceof MESException) {
 				throw e;
@@ -98,15 +99,15 @@ public class DiscussionController implements IDiscussionAPI {
 			@ApiResponse(code = 400, message = "Bad Request", response = ErrorResponse.class),
 			@ApiResponse(code = 500, message = "Internal Server Error", response = ErrorResponse.class),
 			@ApiResponse(code = 401, message = "UnAuthorized", response = ErrorResponse.class) })
+	@ApiImplicitParam(paramType="header",name="Authorization",required=true)
 	@ResponseStatus(code = HttpStatus.OK)
 	public ResponseEntity<DiscussionResponse> getAllDiscussionByCategory(
-			@RequestHeader(name = "Authorization") String authToken,
 			@ApiParam(name = "categoryId", required = true) @PathVariable("categoryId") String categoryId)
 			throws MESException {
 		try {
 
-			return ResponseEntity.status(HttpStatus.OK)
-					.body(new DiscussionResponseMapper().apply(discussionService.getAllDiscusionByCategory(authToken,categoryId)));
+			return ResponseEntity.status(HttpStatus.OK).body(
+					new DiscussionResponseMapper().apply(discussionService.getAllDiscusionByCategory(categoryId)));
 		} catch (Exception e) {
 			if (e instanceof MESException) {
 				throw e;
@@ -123,15 +124,16 @@ public class DiscussionController implements IDiscussionAPI {
 			@ApiResponse(code = 400, message = "Bad Request", response = ErrorResponse.class),
 			@ApiResponse(code = 500, message = "Internal Server Error", response = ErrorResponse.class),
 			@ApiResponse(code = 401, message = "UnAuthorized", response = ErrorResponse.class) })
+	@ApiImplicitParam(paramType="header",name="Authorization",required=true)
 	@ResponseStatus(code = HttpStatus.ACCEPTED)
-	public ResponseEntity<DiscussionResponse> editDiscussion(@RequestHeader(name = "Authorization")String authToken,@RequestBody DiscussionRequest discussionRequest)
+	public ResponseEntity<DiscussionResponse> editDiscussion(@RequestBody DiscussionRequest discussionRequest)
 			throws MESException {
 		try {
 			if (discussionRequest.getDiscussion().getId() == null) {
 				throw new MESException("BAD_REQUEST", "ID must be present for update", HttpStatus.BAD_REQUEST, null);
 			}
 			return ResponseEntity.status(HttpStatus.ACCEPTED).body(new DiscussionResponseMapper()
-					.apply(discussionService.updateDiscussion(authToken, discussionRequest.getDiscussion())));
+					.apply(discussionService.updateDiscussion(discussionRequest.getDiscussion())));
 		} catch (Exception e) {
 			if (e instanceof MESException) {
 				throw e;
@@ -148,13 +150,16 @@ public class DiscussionController implements IDiscussionAPI {
 			@ApiResponse(code = 400, message = "Bad Request", response = ErrorResponse.class),
 			@ApiResponse(code = 500, message = "Internal Server Error", response = ErrorResponse.class),
 			@ApiResponse(code = 401, message = "UnAuthorized", response = ErrorResponse.class) })
+	@ApiImplicitParam(paramType="header",name="Authorization",required=true)
 	@ResponseStatus(code = HttpStatus.OK)
-	public ResponseEntity<DiscussionResponse> searchDiscussion(@RequestHeader(name = "Authorization")String authToken,@ApiParam(example="body",value="filter") @RequestParam("filter") SearchType filter,
-			@ApiParam(example="some text",value="textQuery")@RequestParam("textQuery") String textQuery) throws MESException {
+	public ResponseEntity<DiscussionResponse> searchDiscussion(
+			@ApiParam(example = "body", value = "filter") @RequestParam("filter") SearchType filter,
+			@ApiParam(example = "some text", value = "textQuery") @RequestParam("textQuery") String textQuery)
+			throws MESException {
 		try {
 
-			return ResponseEntity.status(HttpStatus.OK).body(new DiscussionResponseMapper()
-					.apply(discussionService.searchDiscussion(authToken, filter,textQuery)));
+			return ResponseEntity.status(HttpStatus.OK)
+					.body(new DiscussionResponseMapper().apply(discussionService.searchDiscussion(filter, textQuery)));
 		} catch (Exception e) {
 			if (e instanceof MESException) {
 				throw e;

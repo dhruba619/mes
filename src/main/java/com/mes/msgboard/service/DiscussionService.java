@@ -38,7 +38,7 @@ public class DiscussionService {
 	@Autowired
 	IDiscussionRepository discussionRepository;
 
-	public List<Discussion> createDiscusion(String authToken, DiscussionData data) throws MESException {
+	public List<Discussion> createDiscusion(DiscussionData data) throws MESException {
 
 		List<Discussion> discussions = new ArrayList<>();
 
@@ -54,7 +54,7 @@ public class DiscussionService {
 
 			categoryService.lockCatgeroryForUpdates(cat);
 
-			user = userService.getUserFromToken(authToken);
+			user = userService.getUserFromToken();
 		} catch (MESException e) {
 			throw e;
 		}
@@ -78,7 +78,7 @@ public class DiscussionService {
 
 	}
 
-	public List<Discussion> getAllDiscusion(String authToken) throws MESException {
+	public List<Discussion> getAllDiscusion() throws MESException {
 		List<Discussion> discussions;
 		try {
 			discussions = StreamSupport.stream(discussionRepository.findAll().spliterator(), false)
@@ -90,7 +90,7 @@ public class DiscussionService {
 
 	}
 
-	public List<Discussion> getAllDiscusionByCategory(String authToken, String categoryId) throws MESException {
+	public List<Discussion> getAllDiscusionByCategory(String categoryId) throws MESException {
 		List<Discussion> discussions;
 		try {
 			discussions = discussionRepository.findByCategoryIdId(Integer.valueOf(categoryId));
@@ -100,7 +100,7 @@ public class DiscussionService {
 		return discussions;
 	}
 
-	public List<Discussion> updateDiscussion(String authToken, DiscussionData data) throws MESException {
+	public List<Discussion> updateDiscussion(DiscussionData data) throws MESException {
 		List<Discussion> discussions = new ArrayList<>();
 
 		Discussion discussion = new Discussion();
@@ -108,7 +108,7 @@ public class DiscussionService {
 		User user;
 		try {
 			cat = categoryService.getCategory(data.getCategoryId()).get(0);
-			user = userService.getUserFromToken(authToken);
+			user = userService.getUserFromToken();
 		} catch (MESException e) {
 			throw e;
 		}
@@ -132,8 +132,7 @@ public class DiscussionService {
 		return discussions;
 	}
 
-	public List<Discussion> searchDiscussion(String authToken, SearchType filter, String textQuery)
-			throws MESException {
+	public List<Discussion> searchDiscussion(SearchType filter, String textQuery) throws MESException {
 		List<Discussion> discussions;
 		try {
 			switch (filter) {

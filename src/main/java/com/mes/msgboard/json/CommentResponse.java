@@ -10,6 +10,10 @@ import io.swagger.annotations.ApiModelProperty;
 @ApiModel(value="CommentResponse",description="Comment response object")
 public class CommentResponse implements Serializable{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 5743111590302194519L;
 	@ApiModelProperty(dataType = "List", required = true, name = "comment", value = "comment")
 	private List<CommentData> comment;
 

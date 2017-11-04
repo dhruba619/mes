@@ -8,17 +8,17 @@ import com.mes.msgboard.json.DiscussionRequest;
 import com.mes.msgboard.json.DiscussionResponse;
 
 public interface IDiscussionAPI {
-	public ResponseEntity<DiscussionResponse> createDiscussion(String authToken, DiscussionRequest discussionRequest)
+	public ResponseEntity<DiscussionResponse> createDiscussion(DiscussionRequest discussionRequest)
 			throws MESException;
 
-	public ResponseEntity<DiscussionResponse> getAllDiscussion(String authToken) throws MESException;
+	public ResponseEntity<DiscussionResponse> getAllDiscussion() throws MESException;
 
-	public ResponseEntity<DiscussionResponse> getAllDiscussionByCategory(String authToken, String categoryId)
+	public ResponseEntity<DiscussionResponse> getAllDiscussionByCategory(String categoryId)
 			throws MESException;
 
-	public ResponseEntity<DiscussionResponse> editDiscussion(String authToken, DiscussionRequest discussionRequest)
+	public ResponseEntity<DiscussionResponse> editDiscussion(DiscussionRequest discussionRequest)
 			throws MESException;
 
-	public ResponseEntity<DiscussionResponse> searchDiscussion(String authToken, SearchType filter, String textQuery)
+	public ResponseEntity<DiscussionResponse> searchDiscussion(SearchType filter, String textQuery)
 			throws MESException;
 }

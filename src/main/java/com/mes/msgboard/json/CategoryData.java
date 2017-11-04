@@ -1,7 +1,6 @@
 package com.mes.msgboard.json;
 
 import java.io.Serializable;
-import java.sql.Timestamp;
 import java.time.ZonedDateTime;
 
 import javax.validation.constraints.NotNull;

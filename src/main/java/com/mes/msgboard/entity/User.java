@@ -1,15 +1,17 @@
 package com.mes.msgboard.entity;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 import javax.validation.constraints.NotNull;
 
@@ -54,18 +56,14 @@ public class User implements UserDetails {
 	@ApiModelProperty(dataType = "boolean", required = false, name = "isActive", value = "isActive")
 	private boolean isActive;
 
-	@Column(name = "last_login")
-	@ApiModelProperty(dataType = "string", required = false, name = "lastLogin", value = "lastLogin")
-	private Timestamp lastLogin;
-
 	@Column(name = "image_url")
 	@ApiModelProperty(dataType = "string", required = false, name = "imageUrl", value = "imageUrl")
 	private String imageUrl;
 
-	@Column(name = "role")
-	@NotNull
+	@ManyToOne(fetch = FetchType.EAGER)
+	@JoinColumn(name = "role")
 	@ApiModelProperty(dataType = "string", required = true, name = "role", value = "role")
-	private String role;
+	private Role role;
 
 	public Integer getId() {
 		return id;
@@ -115,14 +113,6 @@ public class User implements UserDetails {
 		this.isActive = isActive;
 	}
 
-	public Timestamp getLastLogin() {
-		return lastLogin;
-	}
-
-	public void setLastLogin(Timestamp lastLogin) {
-		this.lastLogin = lastLogin;
-	}
-
 	public String getImageUrl() {
 		return imageUrl;
 	}
@@ -131,16 +121,16 @@ public class User implements UserDetails {
 		this.imageUrl = imageUrl;
 	}
 
-	public String getRole() {
+	public Role getRole() {
 		return role;
 	}
 
-	public void setRole(String role) {
+	public void setRole(Role role) {
 		this.role = role;
 	}
 
 	public User(Integer id, String name, String email, String password, String userName, boolean isActive,
-			Timestamp lastLogin, String imageUrl, String role) {
+			String imageUrl, Role role) {
 		super();
 		this.id = id;
 		this.name = name;
@@ -148,7 +138,18 @@ public class User implements UserDetails {
 		this.password = password;
 		this.username = userName;
 		this.isActive = isActive;
-		this.lastLogin = lastLogin;
+		this.imageUrl = imageUrl;
+		this.role = role;
+	}
+	
+	public User(String name, String email, String password, String userName, boolean isActive,
+			String imageUrl, Role role) {
+		super();
+		this.name = name;
+		this.email = email;
+		this.password = password;
+		this.username = userName;
+		this.isActive = isActive;
 		this.imageUrl = imageUrl;
 		this.role = role;
 	}
@@ -159,8 +160,7 @@ public class User implements UserDetails {
 
 	@Override
 	public Collection<? extends GrantedAuthority> getAuthorities() {
-		
-		
+
 		List<GrantedAuthority> authorities = new ArrayList<GrantedAuthority>();
 		GrantedAuthority authority = new GrantedAuthority() {
 
@@ -168,15 +168,10 @@ public class User implements UserDetails {
 
 			@Override
 			public String getAuthority() {
-				System.out.println("#############################AUTHO##########################");
-				System.out.println(role);
-				return role;
+				return role.getValue();
 			}
 		};
 		authorities.add(authority);
-		
-		System.out.println("#############################AUTHO##########################");
-		System.out.println(authorities.get(0).getAuthority());
 		return authorities;
 	}
 

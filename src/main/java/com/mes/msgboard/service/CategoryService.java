@@ -41,10 +41,10 @@ public class CategoryService {
 	 * @return
 	 * @throws MESException
 	 */
-	public List<Category> createCategory(String authToken, CategoryData categoryData) throws MESException {
+	public List<Category> createCategory(CategoryData categoryData) throws MESException {
 		
-		User user =userService.getUserFromToken(authToken);		
-		if (!user.getRole().equals("ADMIN")) {
+		User user =userService.getUserFromToken();		
+		if (!user.getRole().getValue().equals("ADMIN")) {
 			throw new MESException("FORBIDDEN", "User is forbidden to perform this operation", HttpStatus.FORBIDDEN, null);
 		}
 		
@@ -81,7 +81,7 @@ public class CategoryService {
 	 * @return
 	 */
 	public List<Category> getAllCategories() {
-		return StreamSupport.stream(categoryRepository.findAll().spliterator(), false).collect(Collectors.toList());
+		return StreamSupport.stream(categoryRepository.findAllByPurged(false).spliterator(), false).collect(Collectors.toList());
 	}
 
 	/**
@@ -115,14 +115,14 @@ public class CategoryService {
 	 * @return
 	 * @throws MESException
 	 */
-	public List<Category> updateCategory(String authToken, CategoryData categoryData) throws MESException {
+	public List<Category> updateCategory(CategoryData categoryData) throws MESException {
 		isCategoryLocked(categoryData.getId());
 		List<Category> categories = new ArrayList<>();
 		Category category = new Category();
 		category.setId(categoryData.getId());
 		category.setAllowDiscussions(categoryData.isAllowDiscussions());
 		category.setLocked(categoryData.isLocked());
-		category.setCreatedBy(userService.getUserFromToken(authToken));
+		category.setCreatedBy(userService.getUserFromToken());
 		category.setCreatedOn(Timestamp.from(ZonedDateTime.now(ZoneOffset.UTC).toInstant()));
 		category.setDescription(categoryData.getDescription());
 		category.setName(categoryData.getName());
