@@ -146,7 +146,7 @@ public class CategoryController implements ICategoryApi {
 
 	@Override
 	@RequestMapping(path = "/{categoryId}", method = RequestMethod.DELETE)
-	@ApiOperation(value = "Delete category by id", tags = "category", response = CategoryResponse.class, code = 204)
+	@ApiOperation(value = "Delete category by id", tags = "category", code = 204)
 	@ApiResponses(value = { @ApiResponse(code = 204, message = "No Content"),
 			@ApiResponse(code = 400, message = "Bad Request", response = ErrorResponse.class),
 			@ApiResponse(code = 500, message = "Internal Server Error", response = ErrorResponse.class),

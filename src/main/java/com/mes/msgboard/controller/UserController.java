@@ -84,7 +84,7 @@ public class UserController implements IUserApi {
 	@ResponseStatus(code = HttpStatus.OK)
 	@RequestMapping(path = "", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<UserResponse> getAllUser() {
-		return ResponseEntity.status(HttpStatus.CREATED).body(new UserResponseMapper().apply(userService.getAllUser()));
+		return ResponseEntity.status(HttpStatus.OK).body(new UserResponseMapper().apply(userService.getAllUser()));
 	}
 
 	@Override
@@ -105,7 +105,7 @@ public class UserController implements IUserApi {
 			if (validator.validate(request.getUser(), Default.class).size() > 0) {
 				throw new MESException("BAD_REQUEST", "Missing required param", HttpStatus.BAD_REQUEST, null);
 			}
-			return ResponseEntity.status(HttpStatus.CREATED)
+			return ResponseEntity.status(HttpStatus.ACCEPTED)
 					.body(new UserResponseMapper().apply(userService.saveUser(request.getUser())));
 		} catch (Exception e) {
 			if (e instanceof MESException) {
@@ -128,7 +128,7 @@ public class UserController implements IUserApi {
 	@RequestMapping(path = "/{userId}", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
 	public ResponseEntity<UserResponse> getUser(
 			@ApiParam(name = "userId", required = true) @PathVariable("userId") String id) {
-		return ResponseEntity.status(HttpStatus.CREATED)
+		return ResponseEntity.status(HttpStatus.OK)
 				.body(new UserResponseMapper().apply(userService.getUser(Integer.valueOf(id))));
 	}
 

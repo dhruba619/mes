@@ -21,7 +21,7 @@ public class Role {
 	@ApiModelProperty(dataType = "string", required = false, name = "id", value = "id")
 	private Integer id;
 
-	@Column(name = "value")
+	@Column(name = "value", unique=true)
 	@ApiModelProperty(dataType = "value", required = true, name = "value", value = "value")
 	@NotNull
 	private String value;

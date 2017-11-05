@@ -28,7 +28,7 @@ public class Category {
 	public Integer id;
 
 	
-	@Column(name = "name")
+	@Column(name = "name",unique=true)
 	private String name;
 
 	@Column(name = "description")

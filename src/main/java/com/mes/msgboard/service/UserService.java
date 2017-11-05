@@ -52,10 +52,10 @@ public class UserService implements UserDetailsService {
 		}
 		User user;
 		if (userdata.getId() == null || userdata.getId() == 0) {
-			user = new User(userdata.getId(), userdata.getName(), userdata.getEmail(), userdata.getPassword(),
+			user = new User(userdata.getName(), userdata.getEmail(), userdata.getPassword(),
 					userdata.getUsername(), userdata.isActive(), userdata.getImageUrl(), role);
 		} else {
-			user = new User(userdata.getName(), userdata.getEmail(), userdata.getPassword(), userdata.getUsername(),
+			user = new User(userdata.getId(), userdata.getName(), userdata.getEmail(), userdata.getPassword(), userdata.getUsername(),
 					userdata.isActive(), userdata.getImageUrl(), role);
 		}
 

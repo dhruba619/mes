@@ -161,7 +161,7 @@ public class CategoryService {
 	 * @param id
 	 */
 	public void deleteCategory(Integer id) {
-		categoryRepository.delete(id);
+		categoryRepository.purge(true,id);
 
 	}
 

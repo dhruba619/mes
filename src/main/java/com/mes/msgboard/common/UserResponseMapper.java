@@ -18,7 +18,7 @@ public class UserResponseMapper implements Function<List<User>, UserResponse> {
 	}
 
 	private UserData convert(User u) {
-		return new UserData(u.getId(), u.getName(), u.getEmail(), u.getPassword(), u.getEmail(), u.isActive(),
+		return new UserData(u.getId(), u.getName(), u.getEmail(), u.getPassword(), u.getUsername(), u.isActive(),
 				u.getImageUrl(), u.getRole().getId());
 	}
 }

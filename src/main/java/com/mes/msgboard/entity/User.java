@@ -13,6 +13,7 @@ import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
 import javax.validation.constraints.NotNull;
 
 import org.springframework.security.core.GrantedAuthority;
@@ -37,7 +38,7 @@ public class User implements UserDetails {
 	@NotNull
 	private String name;
 
-	@Column(name = "email")
+	@Column(name = "email",unique=true)
 	@NotNull
 	@ApiModelProperty(dataType = "string", required = true, name = "email", value = "email")
 	private String email;
@@ -47,7 +48,7 @@ public class User implements UserDetails {
 	@ApiModelProperty(dataType = "string", required = true, name = "password", value = "password")
 	private String password;
 
-	@Column(name = "usename")
+	@Column(name = "usename",unique=true)
 	@NotNull
 	@ApiModelProperty(dataType = "string", required = true, name = "userName", value = "userName")
 	private String username;
